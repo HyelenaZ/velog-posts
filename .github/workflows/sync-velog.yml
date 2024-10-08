@@ -1,8 +1,7 @@
 name: Sync Velog posts
-
 on:
   schedule:
-    - cron: '0 * * * *'  # 매시간마다 실행
+    - cron: '0 */6 * * *'  # 6시간마다 실행
   workflow_dispatch:  # 수동 실행 옵션
 
 jobs:
@@ -10,25 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v3
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
-
+          node-version: '16'
       - name: Install dependencies
-        run: npm install axios fs-extra
-
+        run: npm ci
       - name: Fetch and sync Velog posts
         run: node sync-velog.js
         env:
           VELOG_USER_ID: ${{ secrets.VELOG_USER_ID }}
-
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Sync Velog posts" || exit 0
+          git diff --quiet && git diff --staged --quiet || git commit -m "Sync Velog posts"
           git push
