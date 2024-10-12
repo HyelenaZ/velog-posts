@@ -1,4 +1,11 @@
 {
+  "name": "velog-posts-sync",
+  "version": "1.0.0",
+  "description": "Sync Velog posts to GitHub",
+  "main": "sync-velog.js",
+  "scripts": {
+    "sync": "node sync-velog.js"
+  },
   "dependencies": {
     "axios": "^0.27.2",
     "fs-extra": "^10.0.0"
